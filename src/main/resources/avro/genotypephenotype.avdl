@@ -99,7 +99,7 @@ record PhenotypeInstance {
   union { null, string } id;
 
   /** HPO is recommended */
-  OntologyTerm type;
+  array<OntologyTerm> type;
 
   /** 
   PATO is recommended.  Often this qualifier might be for abnormal/normal, 
