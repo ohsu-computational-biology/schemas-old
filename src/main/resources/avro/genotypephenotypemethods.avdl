@@ -75,15 +75,14 @@ SearchPhenotypeAssociationSetsResponse searchPhenotypeAssociationSets(
 /******************  /phenotypes/search  *********************/
 
 /**
-One or more phenotypes can be queried together.
+Query phenotype. See genotypephenotype.avdl for property explanations.
 */
 record PhenotypeQuery {
-  union { null, string } name; /* new field, regex */
+  union { null, string } id; 
+  union { null, string } description; /* The system should support regular expression matches */
   union { null, org.ga4gh.models.OntologyTerm } type = null;
-  union { null, array<org.ga4gh.models.OntologyTerm> } qualifier = null;
+  union { null, array<org.ga4gh.models.OntologyTerm> } qualifiers = null;  /* terms should be OR'd together. e.g. (severe OR abnormal) */
   union { null, org.ga4gh.models.OntologyTerm } ageOfOnset = null;
-  union { null, string } description = null;  /*regex*/
-  union { null, array<org.ga4gh.models.ExternalIdentifier> }  externalIdentifiers = null;
 }
 
 /**
@@ -114,7 +113,8 @@ record EvidenceQuery {
 
 record GenotypeQuery {
   /**
-  only those fields from feature that are `queryable`
+  This is similar to FeatureQuery  '/features/search' served by Sequence Annotations
+  But is intended to be served from the G2P knowledgebase
   */
   union { null, string } name; /* new field, regex */
   union { null, string } description; /* new field,regex */
@@ -128,14 +128,14 @@ record GenotypeQuery {
   union { null, array<org.ga4gh.models.ExternalIdentifier> } externalIdentifiers = null; /* new field */
 }
 
-record SearchPhenotypeRequest {
+record SearchPhenotypesRequest {
 
   /**
   The `PhenotypeAssociationSet` to search.
   */
   string phenotypeAssociationSetId;
 
-  array<PhenotypeQuery> phenotypes = [];
+  PhenotypeQuery phenotype ;
 
   /**
   Specifies the maximum number of results to return in a single page.
@@ -151,12 +151,12 @@ record SearchPhenotypeRequest {
   union { null, string } pageToken = null;
 }
 
-/** This is the response from `POST /phenotype/search` expressed as JSON. */
+/** This is the response from `POST /phenotypes/search` expressed as JSON. */
 record SearchPhenotypeResponse {
   /**
-  The list of matching FeaturePhenotypeInstances.
+  The list of matching PhenotypeInstances.
   */
-  array<org.ga4gh.models.PhenotypeInstance> phenotypes = [];
+  array<org.ga4gh.models.PhenotypeInstance>  phenotypes ;
 
   /**
   The continuation token, which is used to page through large result sets.
@@ -180,9 +180,7 @@ SearchPhenotypeResponse searchPhenotype(
   SearchPhenotypeRequest request) throws GAException;
 
 
-
-
-/******************  /genotype/search  *********************/
+/******************  /genotypes/search  *********************/
 
 record SearchGenotypesRequest {
 
@@ -191,7 +189,7 @@ record SearchGenotypesRequest {
   */
   string phenotypeAssociationSetId;
 
-  array<GenotypeQuery> genotypes = [];
+  GenotypeQuery genotype  ;
 
    /**
   Specifies the maximum number of results to return in a single page.
@@ -207,7 +205,7 @@ record SearchGenotypesRequest {
   union { null, string } pageToken = null;
 }
 
-/** This is the response from `POST /genotype/search` expressed as JSON. */
+/** This is the response from `POST /genotypes/search` expressed as JSON. */
 record SearchGenotypesResponse {
   /**
   The list of matching Features.  As other associations are defined, this
@@ -225,7 +223,7 @@ record SearchGenotypesResponse {
 }
 
 
-/******************  /genotypephenotype/search  *********************/
+/******************  /genotypephenotypes/search  *********************/
 
 
 /**
@@ -301,19 +299,72 @@ record SearchGenotypePhenotypeResponse {
   union { null, string } nextPageToken = null;
 }
 
-/**
-Gets a list of evidence accessible through the API.
 
-`POST /genotypephenotype/search` must accept a JSON version of
-`SearchGenotypePhenotypeRequest` as the post body and will return a JSON version
-of `SearchGenotypePhenotypeResponse`.
-*/
-SearchGenotypePhenotypeResponse searchGenotypePhenotype(
+record GetEntityGenotypePhenotypeRequest {
+
   /**
-  This request maps to the body of `POST /genotypepheotype/search` as JSON.
+  The `PhenotypeAssociationSet` to search.
   */
-  SearchGenotypePhenotypeRequest request) throws GAException;
+  string phenotypeAssociationSetId;
 
+  /**
+  The ID of the `Entity`.
+  */
+  string id ;
+
+  /**
+  Specifies the maximum number of results to return in a single page.
+  If unspecified, a system default will be used.
+  */
+  union { null, int } pageSize = null;
+
+  /**
+  The continuation token, which is used to page through large result sets.
+  To get the next page of results, set this parameter to the value of
+  `nextPageToken` from the previous response.
+  */
+  union { null, string } pageToken = null;
+}
+
+/** convenience methods, these methods do no searching, simply return a list of associations **/
+
+/**
+This request maps to the body of `POST /feature/associations` as JSON.
+*/
+SearchGenotypePhenotypeResponse getFeatureAssociations(
+  /**
+  Returns all associations for the feature.
+  */
+  GetEntityGenotypePhenotypeRequest request) throws GAException;
+
+
+/**
+This request maps to the body of `POST /phenotype/associations` as JSON.
+*/
+SearchGenotypePhenotypeResponse getPhenotypeAssociations(
+  /**
+  Returns all associations for the phenotype.
+  */
+  GetEntityGenotypePhenotypeRequest request) throws GAException;
+
+
+/**
+This request maps to the body of `POST /genotype/associations` as JSON.
+*/
+SearchGenotypePhenotypeResponse getGenotypeAssociations(
+  /**
+  Returns all associations for the genotype.
+  */
+  GetEntityGenotypePhenotypeRequest request) throws GAException;
+
+/**
+This request maps to the body of `POST /environment/associations` as JSON.
+*/
+SearchGenotypePhenotypeResponse getEnvironmentAssociations(
+  /**
+  Returns all associations for the environment.
+  */
+  GetEntityGenotypePhenotypeRequest request) throws GAException;
 
 
 }
