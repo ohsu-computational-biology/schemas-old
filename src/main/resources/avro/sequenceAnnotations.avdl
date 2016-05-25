@@ -38,9 +38,9 @@ protocol SequenceAnnotations {
   */
   record Feature {
     /**
-    Id of this annotation node.
+    Identifier for the containing feature set.
     */
-    string id;
+    string featureSetId;
 
     /**
     Parent Id of this node. Set to empty string if node has no parent.
@@ -54,11 +54,6 @@ protocol SequenceAnnotations {
     */
 
     array<string> childIds = [];
-
-    /**
-    Identifier for the containing feature set.
-    */
-    string featureSetId;
 
     /**
     The reference on which this feature occurs.
