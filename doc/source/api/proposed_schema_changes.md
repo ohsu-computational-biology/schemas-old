@@ -1,4 +1,3 @@
-
 #Summary
 -------
 
@@ -38,11 +37,9 @@ and
 
 ##API
 
-The G2P schemas define a several endpoints broken into two entity searches and an association search.   
+The G2P schemas define several endpoints broken into two entity searches and an association search.
 
-A feature or phenotype can potentially be represented in increasing
-specificity as either [a string, an ontology identifier, an external
-identifier, or as a feature 'entity'].  One criticism of the previous API is that it is overloaded, it violates a design goal of separation of concerns.  Specifically it combines the search for evidence with search for features & search for genotypes.
+A feature or phenotype can potentially be represented in increasing specificity as either [a string, an ontology identifier, an external identifier, or as a feature 'entity'].  One criticism of the previous API is that it is overloaded, violating the design goal of separation of concerns.  Specifically it combines the search for evidence with search for features & search for genotypes.
 
 The refactored API move search,alias matching and external identifiers lookup to dedicated end points. To separate concens, a client performs the queries for evidence in two steps: first find the desired entities and then you those enitity identifiers to narrow the search for evidence.
 
@@ -54,23 +51,23 @@ Additionally the API supports two implementation styles: integrated and standalo
 ###Entity Searches
 
 * ``/datasets/<datasetId>/features/search``
-	* 	Given a SearchFeaturesRequest, return matching _features_ in the `current 'omics dataset`. Intended for sequence annotation and GA4GH datasets. 
+	* 	Given a SearchFeaturesRequest, return matching _features_ in the `current 'omics dataset`. Intended for sequence annotation and GA4GH datasets.
 * ``/associations/<phenotypeAssociationSetId>/genotypes/search``
 	* 	Given a SearchGenotypesRequest, return matching _genotypes_ in the in the `current g2p dataset.`.  Intended for standalone local G2P "knowledge bases"
-* ``/associations/<phenotypeAssociationSetId>/phenotypes/search`` 
-	* 	Given a SearchPhenotypesRequest, return matching _phenotypes_ in the in the `current g2p dataset.` 
+* ``/associations/<phenotypeAssociationSetId>/phenotypes/search``
+	* 	Given a SearchPhenotypesRequest, return matching _phenotypes_ in the in the `current g2p dataset.`
 
 
 ###Association Search
 
 * ``/associations/<phenotypeAssociationSetId>/genotypephenotypes/search``
-	* 	Given a SearchGenotypePhenotypeRequest, return matching _evidence associations_ in the `current g2p dataset.` 
+	* 	Given a SearchGenotypePhenotypeRequest, return matching _evidence associations_ in the `current g2p dataset.`
 
 
 Usage
 ---
 
-1. As a GA4GH client, use entity queries the for the genotypes and phenotypes you are interested in. 
+1. As a GA4GH client, use entity queries the for the genotypes and phenotypes you are interested in.
 2. Create an association search using the entity identifiers from step 1.
 3. Repeat 1-2 as necessary, collating responses on the client.
 
@@ -86,7 +83,7 @@ Details
 
 
 
-Terms within a query are combined via AND 
+Terms within a query are combined via AND
 e.g
 
 ```
@@ -94,17 +91,17 @@ request = "phenotype": { description:"AML",  "ageOfOnset": {"id": "http://purl.o
 
 is transformed by the server to:
 
-query = (description="AML" and ageOfOnset="http://purl.obolibrary.org/obo/HP_0003581") 
+query = (description="AML" and ageOfOnset="http://purl.obolibrary.org/obo/HP_0003581")
 ```
 
-Items in the qualifiers array are OR'd together. For example, severe or abnormal: 
+Items in the qualifiers array are OR'd together. For example, severe or abnormal:
 
 ```
 request = ... "phenotype": { description:"AML",  "qualifiers": [{"id": "http://purl.obolibrary.org/obo/PATO_0000396"},{"id":"http://purl.obolibrary.org/obo/PATO_0000460"}] } ....
 
 is transformed by the server to:
 
-query = (description="AML" and (qualifier = "http://purl.obolibrary.org/obo/PATO_0000460" or qualifier = "http://purl.obolibrary.org/obo/PATO_0000460")) 
+query = (description="AML" and (qualifier = "http://purl.obolibrary.org/obo/PATO_0000460" or qualifier = "http://purl.obolibrary.org/obo/PATO_0000460"))
 ```
 
 The service returns a list of matching PhenotypeInstances.
@@ -162,7 +159,7 @@ ___
 
 
 
-Terms within a query are combined via AND 
+Terms within a query are combined via AND
 e.g
 
 ```
@@ -170,7 +167,7 @@ request = "feature": { "name":"KIT",  "referenceName": "hg38" }
 
 becomes
 
-query = (name="KIT" and referenceName ="hg38") 
+query = (name="KIT" and referenceName ="hg38")
 ```
 
 
@@ -218,7 +215,7 @@ ___
 
 ###``/genotypephenotypes/search``
 
-The endpoint accepts a SearchGenotypePhenotypeRequest POST. 
+The endpoint accepts a SearchGenotypePhenotypeRequest POST.
 The request may contain a feature, phenotype, and/or evidence, which are combined as a logical AND to query the underlying datastore. Missing types are treated as a wildcard, returning all data.  The genotype and phenotype fields are either null or a list of identifiers returned from the entity queries.  The evidence query object allows filtering by evidence type.
 
 ![http://yuml.me/edit/bf06b90a](../_static/search_genotype_phenotype_request.png)
@@ -377,7 +374,7 @@ for an ontology source e.g. http://purl.obolibrary.org/obo/hp.obo
 OntologyTerm is obtained. E.g. 2.6.1. There is no standard for ontology
 versioning and some frequently released ontologies may use a datestamp,
 or build number.
- 
+
 
 
 
