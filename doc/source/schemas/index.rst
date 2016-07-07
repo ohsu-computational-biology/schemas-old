@@ -4,8 +4,12 @@ Schemas
 !!!!!!!
 
 .. toctree::
-<<<<<<< HEAD
    common.proto.rst
+   assay_metadata.proto.rst
+   bio_metadata.proto.rst
+   bio_metadata_service.proto.rst
+   genotypephenotype.proto.rst
+   genotypephenotypemethods.proto.rst
    metadata.proto.rst
    metadata_service.proto.rst
    reads.proto.rst
@@ -19,22 +23,3 @@ Schemas
    sequence_annotations.proto.rst
    sequence_annotation_service.proto.rst
    struct.proto.rst
-=======
-   common
-   genotypephenotype
-   genotypephenotypemethods
-   metadata
-   metadatamethods
-   methods
-   readmethods
-   reads
-   referencemethods
-   references
-   sequenceAnnotations
-   variantmethods
-   variants
-   alleleAnnotationmethods
-   alleleAnnotations
-   sequenceAnnotations
-   sequenceAnnotationmethods
->>>>>>> apichanges-pb
