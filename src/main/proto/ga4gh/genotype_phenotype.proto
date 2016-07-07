@@ -3,7 +3,6 @@ syntax = "proto3";
 package ga4gh;
 
 import "ga4gh/metadata.proto";
-import "ga4gh/sequence_annotations.proto";
 
 /**
 This protocol defines the associations between genotype
@@ -136,7 +135,7 @@ message FeaturePhenotypeAssociation {
     // those typed in the Sequence Ontology (SO).
     // The feature set can have only one item, and must not be null.
 
-    repeated string featureIds = 3;
+    repeated string feature_ids = 3;
 
     // The evidence for this specific instance of association between the
     // features and the phenotype.
