@@ -23,15 +23,14 @@ import "ga4gh/genotype_phenotype.proto";
 */
 
 service GenotypePhenotypeService {
-    
+
     rpc SearchPhenotypeAssociationSets(SearchPhenotypeAssociationSetsRequest)
         returns (SearchPhenotypeAssociationSetsResponse);
 
     rpc SearchPhenotype(SearchPhenotypesRequest)
         returns (SearchPhenotypesResponse);
 
-    rpc GetFeatureAssociations(SearchGenotypePhenotypeRequest)
-        returns (SearchGenotypePhenotypeResponse);
+    // see SequenceAnnotations.SearchFeatureSets    
 
     rpc GetPhenotypeAssociations(SearchGenotypePhenotypeRequest)
         returns (SearchGenotypePhenotypeResponse);
@@ -86,7 +85,7 @@ message ExternalIdentifierQuery {
 message EvidenceQuery {
     // ECO or OBI is recommended
     OntologyTerm evidenceType = 1;
-    
+
     string description = 2;  /*regex*/
 
     repeated ExternalIdentifier external_identifiers = 3; /* new field */
@@ -98,18 +97,18 @@ message SearchPhenotypesRequest {
     string phenotype_association_set_id = 1;
 
     string id = 2;
-    
+
     string description = 3; /* The system should support regular expression matches */
-    
+
     OntologyTerm type = 4;
-    
+
     repeated OntologyTerm qualifiers = 5;  /* terms should be OR'd together. e.g. (severe OR abnormal) */
 
     OntologyTerm age_of_on_set = 6;
 
     // Specifies the maximum number of results to return in a single page.
     // If unspecified, a system default will be used.
-  
+
     int64 page_size = 7;
 
     // The continuation token, which is used to page through large result sets.
@@ -134,21 +133,21 @@ message SearchPhenotypesResponse {
 message SearchGenotypesRequest {
     // The `PhenotypeAssociationSet` to search.
     string phenotype_association_set_id = 1;
-    
+
     string id = 2;
 
     string name = 3; /* new field, regex */
-    
+
     string reference_name = 4;
-    
+
     int64 start = 5;
-    
+
     int64 end = 6;
-    
+
     Strand strand = 7;
-    
+
     OntologyTerm feature_type = 9;
-    
+
     repeated ExternalIdentifier external_identifiers = 10; /* new field */
 
   // Specifies the maximum number of results to return in a single page.
@@ -209,23 +208,21 @@ full feature/phenotype/evidence objects.
 message SearchGenotypePhenotypeRequest {
     // The `PhenotypeAssociationSet` to search.
     string phenotype_association_set_id = 1;
-    
+
     repeated string feature_ids = 2;
 
-    repeated string genotype_ids = 3;
+    repeated string phenotype_ids = 3;
 
-    repeated string phenotype_ids = 4;
-
-    repeated EvidenceQuery evidence = 5;
+    repeated EvidenceQuery evidence = 4;
 
   // Specifies the maximum number of results to return in a single page.
   // If unspecified, a system default will be used.
-  int64 page_size = 6;
+  int64 page_size = 5;
 
   // The continuation token, which is used to page through large result sets.
   // To get the next page of results, set this parameter to the value of
   // `nextPageToken` from the previous response.
-  string page_token = 7;
+  string page_token = 6;
 }
 
 // This is the response from `POST /genotypephenotype/search` expressed as JSON.
@@ -252,7 +249,7 @@ message GetEntityGenotypePhenotypeRequest {
 
   int64 page_size = 3;
 
-  
+
   // The continuation token, which is used to page through large result sets.
   // To get the next page of results, set this parameter to the value of
   // `nextPageToken` from the previous response.
